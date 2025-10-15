@@ -1,8 +1,8 @@
 {
   "name": "@marceloarraes/budibase-currency-input",
-  "author":"MarceloArraes",
-  "repository":"https://github.com/MarceloArraes/currency-input",
-  "version": "1.0.0",
+  "author": "MarceloArraes",
+  "repository": "https://github.com/MarceloArraes/currency-input",
+  "version": "1.0.1",
   "description": "Input to be used to display currency in its correct format",
   "license": "MIT",
   "svelte": "index.js",
