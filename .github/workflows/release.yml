@@ -12,46 +12,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v1
         with:
           node-version: 18
-
-      - name: Build, Package, and Prepare Asset
-        id: package # Give this step an ID to reference its outputs
+      - name: Make the production plugin bundle
         run: |
-          # Install dependencies and build the plugin
+          release_version=$(cat package.json | jq -r '.version')
+          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
           yarn
           yarn build
-
-          # --- Step 1: Create the compressed package ---
-          # 'npm pack' creates a .tgz file (e.g., marceloarraes-budibase-currency-input-1.0.1.tgz)
-          # We capture the exact filename it creates into a variable.
-          PACKAGE_FILENAME=$(npm pack)
-          echo "Created package: $PACKAGE_FILENAME"
-
-          # --- Step 2: Rename the file to the desired .tar.gz extension ---
-          # We construct the new filename by replacing the extension.
-          ASSET_FILENAME="${PACKAGE_FILENAME%.tgz}.tar.gz"
-          mv "$PACKAGE_FILENAME" "$ASSET_FILENAME"
-          echo "Renamed package to: $ASSET_FILENAME"
-          
-          # --- Step 3: Move the final asset into the dist directory ---
-          mv "$ASSET_FILENAME" dist/
-          echo "Moved asset to dist/"
-
-          # --- Step 4: Save the final asset name for the release step ---
-          # This makes the filename available to other steps in the job.
-          echo "::set-output name=asset_name::$ASSET_FILENAME"
-
-      - name: Create GitHub Release and Upload Asset
+      - name: Perform Github Release
         uses: softprops/action-gh-release@v1
         with:
-          # This uses the version from your package.json for the release name/tag
-          tag_name: v${{ fromJson(readFile('package.json')).version }}
+          name: v${{ env.RELEASE_VERSION }}
+          tag_name: v${{ env.RELEASE_VERSION }}
           generate_release_notes: true
-          # This points directly to the final, renamed file in the correct directory
-          files: dist/${{ steps.package.outputs.asset_name }}
+          files: |
+            dist/*.tar.gz
