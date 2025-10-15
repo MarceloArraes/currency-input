@@ -1,6 +1,6 @@
 {
-  "name": "@marceloarraes/budibase-currency-input",
-  "version": "1.0.4",
+  "name": "budibase-aud-currency-input",
+  "version": "1.0.3",
   "description": "A Budibase component for displaying and saving AUD currency values.",
   "author": "MarceloArraes",
   "license": "MIT",
@@ -8,11 +8,6 @@
     "type": "git",
     "url": "https://github.com/MarceloArraes/currency-input.git"
   },
-  "keywords": [
-    "budibase",
-    "budibase-plugin"
-  ],
-  "main": "dist/plugin.min.js",
   "svelte": "index.js",
   "module": "dist/plugin.min.js",
   "scripts": {
@@ -27,11 +22,11 @@
     "@budibase/backend-core": "^2.0.13",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
-    "@rollup/plugin-json": "^4.1.0",
-    "rollup-plugin-copy2": "^0.3.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.2.10",
     "rollup": "^2.44.0",
+    "rollup-plugin-copy2": "^0.3.1",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-polyfill-node": "^0.8.0",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-svelte": "^7.1.0",
