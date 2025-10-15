@@ -27,7 +27,7 @@
     "postcss": "^8.2.10",
     "rollup": "^2.44.0",
     "rollup-plugin-copy2": "^0.3.1",
-    "rollup-plugin-json": "^4.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "rollup-plugin-polyfill-node": "^0.8.0",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-svelte": "^7.1.0",
