@@ -22,11 +22,22 @@ jobs:
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
           yarn
           yarn build
+          
+          # --- ADD THIS LINE ---
+          # This command creates the compressed package file (e.g., marceloarraes-budibase-currency-input-1.0.1.tgz)
+          npm pack
+          
+          # --- AND ADD THIS LINE ---
+          # This command moves the created file into the 'dist' directory
+          mv marceloarraes-*.tgz dist/
+
       - name: Perform Github Release
         uses: softprops/action-gh-release@v1
         with:
           name: v${{ env.RELEASE_VERSION }}
           tag_name: v${{ env.RELEASE_VERSION }}
           generate_release_notes: true
+          # --- FIX THIS LINE ---
+          # The file extension is .tgz, not .tar.gz
           files: |
             dist/*.tar.gz
