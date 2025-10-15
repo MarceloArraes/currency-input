@@ -62,7 +62,7 @@
   </label>
   
   <input
-    class="input"
+    class="spectrum-Textfield input"
     {id}
     type="text"
     placeholder="$0.00"
