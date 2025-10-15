@@ -12,45 +12,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v1
         with:
           node-version: 18
-
-      - name: Build and Package Plugin
-        id: package-step
+      - name: Make the production plugin bundle
         run: |
-          # Get the version for the release name
           release_version=$(cat package.json | jq -r '.version')
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
-
-          # Install dependencies and build the JS file
           yarn
           yarn build
-
-          # Create the compressed package, which will have a .tgz extension
-          TGZ_FILENAME=$(npm pack)
-
-          # --- THIS IS THE FIX ---
-          # Construct the new filename with the .tar.gz extension and rename the file.
-          TARGZ_FILENAME="${TGZ_FILENAME%.tgz}.tar.gz"
-          mv "$TGZ_FILENAME" "$TARGZ_FILENAME"
-          echo "Renamed package to $TARGZ_FILENAME"
-
-          # Move the correctly named package to the dist folder
-          mv "$TARGZ_FILENAME" dist/
-
-          # Save the final, correctly-named asset filename for the next step
-          echo "::set-output name=asset_name::$TARGZ_FILENAME"
-
-      - name: Create GitHub Release and Upload Asset
+      - name: Perform Github Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Release v${{ env.RELEASE_VERSION }}
+          name: v${{ env.RELEASE_VERSION }}
           tag_name: v${{ env.RELEASE_VERSION }}
           generate_release_notes: true
-          # This now points to the correctly named .tar.gz file
-          files: dist/${{ steps.package-step.outputs.asset_name }}
+          files: |
+            dist/*.tar.gz
