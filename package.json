@@ -1,5 +1,7 @@
 {
-  "name": "@marcelo.arraes/currency_input_budibase",
+  "name": "@marceloarraes/budibase-currency-input",
+  "author":"MarceloArraes",
+  "repository":"https://github.com/MarceloArraes/currency-input",
   "version": "1.0.0",
   "description": "Input to be used to display currency in its correct format",
   "license": "MIT",
@@ -9,6 +11,10 @@
     "build": "rollup -c",
     "watch": "rollup -cw"
   },
+  "keywords": [
+    "budibase",
+    "budibase-plugin"
+  ],
   "dependencies": {
     "@crownframework/svelte-error-boundary": "^1.0.3",
     "svelte": "^3.49.0"
