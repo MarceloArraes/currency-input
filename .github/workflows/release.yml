@@ -16,17 +16,29 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - name: Make the production plugin bundle
+
+      - name: Build and Package Plugin
+        id: package-step # Give the step an ID
         run: |
-          release_version=$(cat package.json | jq -r '.version')
-          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+          # Install dependencies and build the JS file
           yarn
           yarn build
+
+          # --- This is the correct way to create the package ---
+          # 'npm pack' creates the .tar.gz file in the root directory
+          PACKAGE_FILENAME=$(npm pack)
+
+          # Move the package to the dist folder for the release step
+          mv "$PACKAGE_FILENAME" dist/
+
+          # Save the filename for the next step
+          echo "::set-output name=asset_name::$PACKAGE_FILENAME"
+
       - name: Perform Github Release
         uses: softprops/action-gh-release@v1
         with:
-          name: v${{ env.RELEASE_VERSION }}
-          tag_name: v${{ env.RELEASE_VERSION }}
+          # Get the version directly from the package.json file
+          tag_name: v${{ fromJson(readFile('package.json')).version }}
           generate_release_notes: true
-          files: |
-            dist/*.tar.gz
+          # Use the output from the previous step to find the file
+          files: dist/${{ steps.package-step.outputs.asset_name }}
