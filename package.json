@@ -1,6 +1,6 @@
 {
   "name": "@marceloarraes/budibase-currency-input",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Budibase component for displaying and saving AUD currency values.",
   "author": "MarceloArraes",
   "license": "MIT",
