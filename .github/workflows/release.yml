@@ -23,8 +23,7 @@ jobs:
       - name: Build and Package Plugin
         id: package-step
         run: |
-          # --- This is the correct way to get the version ---
-          # It reads the version from package.json and saves it as an environment variable
+          # Get the version for the release name
           release_version=$(cat package.json | jq -r '.version')
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
 
@@ -32,22 +31,26 @@ jobs:
           yarn
           yarn build
 
-          # Create the compressed .tar.gz package
-          PACKAGE_FILENAME=$(npm pack)
+          # Create the compressed package, which will have a .tgz extension
+          TGZ_FILENAME=$(npm pack)
 
-          # Move the package to the dist folder for the release step
-          mv "$PACKAGE_FILENAME" dist/
+          # --- THIS IS THE FIX ---
+          # Construct the new filename with the .tar.gz extension and rename the file.
+          TARGZ_FILENAME="${TGZ_FILENAME%.tgz}.tar.gz"
+          mv "$TGZ_FILENAME" "$TARGZ_FILENAME"
+          echo "Renamed package to $TARGZ_FILENAME"
 
-          # Save the final package filename for the next step
-          echo "::set-output name=asset_name::$PACKAGE_FILENAME"
+          # Move the correctly named package to the dist folder
+          mv "$TARGZ_FILENAME" dist/
+
+          # Save the final, correctly-named asset filename for the next step
+          echo "::set-output name=asset_name::$TARGZ_FILENAME"
 
       - name: Create GitHub Release and Upload Asset
         uses: softprops/action-gh-release@v1
         with:
-          # --- This is the correct way to use the version ---
-          # It now reads from the environment variable set in the previous step
           name: Release v${{ env.RELEASE_VERSION }}
           tag_name: v${{ env.RELEASE_VERSION }}
           generate_release_notes: true
-          # This points to the final asset file
+          # This now points to the correctly named .tar.gz file
           files: dist/${{ steps.package-step.outputs.asset_name }}
