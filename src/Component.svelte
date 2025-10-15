@@ -87,9 +87,7 @@
   }
   
   .input {
-    height: 32px;
-    width: 100%;
     text-align: right;
-    border-radius: 4px;
+    border-radius: var(--spectrum-border-radius-medium);
   }
 </style>
