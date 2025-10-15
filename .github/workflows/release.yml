@@ -12,33 +12,42 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v1
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: 18
 
       - name: Build and Package Plugin
-        id: package-step # Give the step an ID
+        id: package-step
         run: |
+          # --- This is the correct way to get the version ---
+          # It reads the version from package.json and saves it as an environment variable
+          release_version=$(cat package.json | jq -r '.version')
+          echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+
           # Install dependencies and build the JS file
           yarn
           yarn build
 
-          # --- This is the correct way to create the package ---
-          # 'npm pack' creates the .tar.gz file in the root directory
+          # Create the compressed .tar.gz package
           PACKAGE_FILENAME=$(npm pack)
 
           # Move the package to the dist folder for the release step
           mv "$PACKAGE_FILENAME" dist/
 
-          # Save the filename for the next step
+          # Save the final package filename for the next step
           echo "::set-output name=asset_name::$PACKAGE_FILENAME"
 
-      - name: Perform Github Release
+      - name: Create GitHub Release and Upload Asset
         uses: softprops/action-gh-release@v1
         with:
-          # Get the version directly from the package.json file
-          tag_name: v${{ fromJson(readFile('package.json')).version }}
+          # --- This is the correct way to use the version ---
+          # It now reads from the environment variable set in the previous step
+          name: Release v${{ env.RELEASE_VERSION }}
+          tag_name: v${{ env.RELEASE_VERSION }}
           generate_release_notes: true
-          # Use the output from the previous step to find the file
+          # This points to the final asset file
           files: dist/${{ steps.package-step.outputs.asset_name }}
