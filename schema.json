@@ -1,0 +1,31 @@
+{
+  "type": "component",
+  "metadata": {},
+  "schema": {
+    "name": "currency_input",
+    "friendlyName": "AUD Currency Input",
+    "description": "An input for AUD currency that saves as a number.",
+    "icon": "Money",
+    "dataType": "number",
+    "subtype": "decimal",
+    "settings": [
+      {
+        "type": "text",
+        "key": "label",
+        "label": "Field Label"
+      },
+      {
+        "type": "field",
+        "key": "value",
+        "label": "Field"
+      }
+    ]
+  },
+  "styles":["margin", "padding", "size"],
+  "styleSchema": [
+    {
+      "key": "size",
+      "type": "size"
+    }
+  ]
+}
