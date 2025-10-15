@@ -1,5 +1,5 @@
 {
-  "name": "currency_input",
+  "name": "@marcelo.arraes/currency_input_budibase",
   "version": "1.0.0",
   "description": "Input to be used to display currency in its correct format",
   "license": "MIT",

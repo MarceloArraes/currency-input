@@ -20,12 +20,5 @@
         "label": "Field"
       }
     ]
-  },
-  "styles":["margin", "padding", "size"],
-  "styleSchema": [
-    {
-      "key": "size",
-      "type": "size"
-    }
-  ]
+  }
 }
