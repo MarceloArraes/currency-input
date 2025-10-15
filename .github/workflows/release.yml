@@ -22,16 +22,6 @@ jobs:
           echo "RELEASE_VERSION=$release_version" >> $GITHUB_ENV
           yarn
           yarn build
-
-          # --- FIX: STEP 1 - CREATE THE PACKAGE ---
-          # 'npm pack' creates the .tar.gz file in the root directory.
-          npm pack
-
-          # --- FIX: STEP 2 - MOVE THE PACKAGE TO THE DIST FOLDER ---
-          # The release action looks for the file in 'dist/', so we move it there.
-          # The wildcard '*' ensures this works for any version number.
-          mv *.tar.gz dist/
-
       - name: Perform Github Release
         uses: softprops/action-gh-release@v1
         with:
